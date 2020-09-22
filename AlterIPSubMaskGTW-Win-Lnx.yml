@@ -1,0 +1,17 @@
+#Efetuar a alteração de IP, máscara de sub rede e gateway em servidores Linux e Windows
+
+---
+- hosts: test
+  tasks:
+  - name: altera informações de rede no Windows
+    win_psexec:
+      command: New-NetIPAddress -IPAddress 10.10.10.10 -PrefixLength 24 -DefaultGateway 10.10.10.1
+    vars:
+      ansible_connection: winrm
+      ansible_port: 5986
+      ansible_winrm_server_cert_validation: ignore
+    when: ansible_os_family=="Windows"
+
+  - name: altera informações de rede no Linux
+    become: true
+    

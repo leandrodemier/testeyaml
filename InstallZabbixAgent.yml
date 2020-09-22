@@ -1,0 +1,22 @@
+#Instalação e configuração
+#Instalar zabbix-agent 
+#Preencher o parâmetro “Server” com diferentes valores no arquivo de configuração, baseado no terceiro 
+#octeto do IP, onde está sendo instalado zabbix-agent
+
+---
+- hosts: test
+  remote_user: root
+  vars:
+    zabbix_server: "172.16.0.1"
+
+  tasks:
+  - name: Instala Zabbix-Agent
+      yum: name=zabbix-agent state=latest
+
+  - lineinfile:
+      path: /etc/zabbix/zabbix_agentd.conf
+      regexp: '^Server=127.0.0.1'
+      line: 'Server=172.16.1.1, 172.16.1.2, 172.16.1.3'
+
+  - name: Iniciando o ZabbixAgent
+      service: name=zabbix-agent state=started enabled=yes
